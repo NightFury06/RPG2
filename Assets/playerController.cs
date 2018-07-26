@@ -25,13 +25,30 @@ public class playerController : MonoBehaviour {
 	void Update () {
 		if (state == "Movement") {
 			Movement ();
+			Swing ();
 		}
 		if (state == "Jump") {
 			Jump ();
 			Movement ();
 		}
-		if (this.state == "Jump" && cc.isGrounded) {
+
+		if (cc.isGrounded && state == "Jump") {
+			jumpVelocity = 0;
 			ChangeState ("Movement");
+		}
+	}
+
+	void Swing()
+	{
+		if (Input.GetMouseButtonDown(0))
+		{
+			ChangeState("Swing");
+			if (cc.isGrounded) {
+				gravity = 0;
+			} else {
+				gravity += 0.25f;
+				gravity = Mathf.Clamp(gravity, 1f, 20f);
+			}
 		}
 	}
 
@@ -69,6 +86,10 @@ public class playerController : MonoBehaviour {
 		}
 
 }
+	void ReturnToMovement()
+	{
+		ChangeState ("Movement");
+	}
 	void Jump()
 	{
 		if (jumpVelocity < 0) { return; }
